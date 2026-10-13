@@ -1,0 +1,66 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Team' }) %>
+<header>
+  <h1 class="text-3xl font-bold tracking-tight text-white">Team</h1>
+  <p class="mt-2 text-sm text-muted">Solo i membri elencati hanno accesso al progetto: il login da solo non basta.</p>
+</header>
+
+<div class="mt-8 overflow-hidden rounded-xl border border-edge bg-panel">
+  <ul class="divide-y divide-edge">
+    <% members.forEach(function (m) { %>
+    <li class="flex flex-wrap items-center justify-between gap-3 p-4">
+      <div class="flex items-center gap-3">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700/50 text-xs font-semibold" aria-hidden="true"><%= m.name.slice(0, 2).toUpperCase() %></span>
+        <div><p class="text-sm font-semibold text-white"><%= m.name %></p>
+          <p class="text-[11px] text-muted"><%= m.discord_id ? 'Discord ' + m.discord_id : 'Account locale: ' + m.local_login %></p></div>
+      </div>
+      <% if (isAdmin) { %>
+      <form data-api-form data-method="PATCH" data-url="/api/projects/<%= project.id %>/members/<%= m.id %>" data-autosubmit class="flex flex-wrap items-center gap-3">
+        <label class="sr-only" for="role-<%= m.id %>">Ruolo</label>
+        <select id="role-<%= m.id %>" name="role" class="rounded-lg border border-edge bg-canvas p-2 text-xs">
+          <% labels.ROLES.forEach(function (r) { %><option value="<%= r %>" <%= m.role === r ? 'selected' : '' %>><%= labels.ROLE_LABELS[r] %></option><% }); %>
+        </select>
+        <label class="flex items-center gap-2 text-xs text-muted"><input type="checkbox" name="can_approve" <%= m.can_approve ? 'checked' : '' %>> Può approvare</label>
+        <button type="button" data-api-action data-method="DELETE" data-url="/api/projects/<%= project.id %>/members/<%= m.id %>" data-confirm="Rimuovere <%= m.name %> dal team?" class="text-xs text-red-300 hover:underline">Rimuovi</button>
+        <span class="form-error text-xs text-red-300" role="alert"></span>
+      </form>
+      <% } else { %>
+      <p class="text-xs text-muted"><%= labels.ROLE_LABELS[m.role] %><%= m.role === 'tester' && m.can_approve ? ' · può approvare' : '' %></p>
+      <% } %>
+    </li>
+    <% }); %>
+  </ul>
+</div>
+
+<% if (isAdmin) { %>
+<form data-api-form data-method="POST" data-url="/api/projects/<%= project.id %>/members" class="mt-6 rounded-xl border border-edge bg-panel p-5">
+  <h2 class="text-sm font-semibold text-white">Aggiungi un membro</h2>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    <div><label for="m-discord" class="mb-2 block text-xs text-muted">Discord user ID</label>
+      <input id="m-discord" name="discord_id" inputmode="numeric" maxlength="25" placeholder="123456789012345678" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+      <p class="field-error mt-1 text-xs text-red-300" data-error-for="discord_id"></p></div>
+    <div><label for="m-name" class="mb-2 block text-xs text-muted">Nome visualizzato (facoltativo)</label>
+      <input id="m-name" name="display_name" maxlength="60" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"></div>
+    <div><label for="m-role" class="mb-2 block text-xs text-muted">Ruolo</label>
+      <select id="m-role" name="role" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+        <% labels.ROLES.forEach(function (r) { %><option value="<%= r %>" <%= r === 'developer' ? 'selected' : '' %>><%= labels.ROLE_LABELS[r] %></option><% }); %>
+      </select></div>
+    <label class="flex items-center gap-2 pt-6 text-xs text-muted"><input type="checkbox" name="can_approve"> Tester autorizzato ad approvare i completamenti</label>
+  </div>
+  <% if (config.localAuth) { %>
+  <details class="mt-4"><summary class="cursor-pointer text-xs text-muted">Oppure crea un account locale (uso senza Discord)</summary>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <div><label for="m-login" class="mb-2 block text-xs text-muted">Login</label>
+        <input id="m-login" name="local_login" maxlength="32" autocomplete="off" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+        <p class="field-error mt-1 text-xs text-red-300" data-error-for="local_login"></p></div>
+      <div><label for="m-pass" class="mb-2 block text-xs text-muted">Password iniziale (min. 12)</label>
+        <input id="m-pass" name="password" type="password" maxlength="200" autocomplete="new-password" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+        <p class="field-error mt-1 text-xs text-red-300" data-error-for="password"></p></div>
+    </div>
+  </details>
+  <% } %>
+  <p class="form-error mt-4 text-sm text-red-300" role="alert"></p>
+  <div class="mt-5 flex justify-end"><button class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-orange-500">Aggiungi al team</button></div>
+</form>
+<% } %>
+<%- include('partials/foot') %>

@@ -1,0 +1,16 @@
+<div class="mb-6 lg:hidden">
+  <div class="flex items-center justify-between">
+    <%- include('brand') %>
+    <form method="post" action="/logout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="rounded-lg border border-edge px-3 py-2 text-xs text-muted hover:text-white">Esci</button>
+    </form>
+  </div>
+  <% if (project) { %>
+  <nav class="-mx-1 mt-4 flex gap-1 overflow-x-auto px-1 pb-1 text-sm" aria-label="Sezioni">
+    <%- include('nav-items', { mobile: true }) %>
+  </nav>
+  <% } else { %>
+  <nav class="mt-4 text-sm"><a href="/" class="rounded-lg bg-accent/10 px-3 py-3 font-semibold text-orange-400">Progetti</a></nav>
+  <% } %>
+</div>

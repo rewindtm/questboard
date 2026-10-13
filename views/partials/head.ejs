@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf-token" content="<%= csrfToken %>">
+<title><%= pageTitle %><%= typeof project !== 'undefined' && project ? ' | ' + project.name : '' %> | Questboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/static/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="bg-canvas font-sans text-slate-200 antialiased">
+<% if (typeof bare !== 'undefined' && bare) { %>
+<main class="flex min-h-screen items-center justify-center p-5">
+<% } else { %>
+<div class="min-h-screen lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+  <%- include('sidebar') %>
+  <main class="min-w-0 p-5 md:p-8 xl:p-10">
+    <%- include('mobilebar') %>
+<% } %>

@@ -1,0 +1,7 @@
+<%- include('partials/head', { bare: true, csrfToken: (typeof csrfToken !== 'undefined' ? csrfToken : '') }) %>
+<div class="w-full max-w-sm rounded-2xl border border-edge bg-panel p-8 text-center">
+  <p class="text-5xl font-bold text-accent"><%= status %></p>
+  <p class="mt-4 text-sm text-slate-300"><%= message %></p>
+  <a href="/" class="mt-6 inline-block rounded-lg border border-edge px-4 py-3 text-sm hover:bg-white/5">Torna ai progetti</a>
+</div>
+<%- include('partials/foot', { bare: true }) %>

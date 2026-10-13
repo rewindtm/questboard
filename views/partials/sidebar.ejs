@@ -1,0 +1,58 @@
+<aside class="hidden flex-col border-r border-edge bg-[#13151a] p-5 lg:flex">
+  <%- include('brand') %>
+
+  <% if (project) { %>
+  <div class="mt-8 rounded-xl border border-edge bg-panel p-4">
+    <p class="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted">Progetto</p>
+    <p class="text-sm font-semibold text-white"><%= project.name %></p>
+    <% if (project.description) { %><p class="mt-1 text-xs text-muted"><%= project.description %></p><% } %>
+    <% if (myProjects.length > 1) { %>
+    <label for="projectSwitch" class="sr-only">Cambia progetto</label>
+    <select id="projectSwitch" data-nav-select class="mt-3 w-full rounded-lg border border-edge bg-canvas p-2 text-xs">
+      <% myProjects.forEach(function (p) { %><option value="/p/<%= p.slug %>" <%= p.id === project.id ? 'selected' : '' %>><%= p.name %></option><% }); %>
+    </select>
+    <% } %>
+  </div>
+
+  <nav class="mt-7 space-y-1 text-sm" aria-label="Sezioni">
+    <%- include('nav-items', { mobile: false }) %>
+  </nav>
+
+  <div class="mt-8 border-t border-edge pt-5" id="releaseBox">
+    <p class="text-xs text-muted">Prossima release</p>
+    <% if (release) { var pct = release.total ? Math.round(release.done / release.total * 100) : 0; %>
+    <div class="mt-3 flex items-center justify-between">
+      <span class="text-sm font-semibold" id="releaseName"><%= release.name %></span>
+      <span class="rounded-md bg-white/5 px-2 py-1 text-[10px] text-muted" id="releaseKind"><%= release.kind === 'milestone' ? 'Milestone' : 'Build' %></span>
+    </div>
+    <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-edge">
+      <div id="sideProgress" class="h-full rounded-full bg-accent" style="width: <%= pct %>%"></div>
+    </div>
+    <p id="sideLabel" class="mt-2 text-[11px] text-muted"><%= release.done %> di <%= release.total %> task completati</p>
+    <% } else { %>
+    <p class="mt-3 text-xs text-slate-500" id="releaseName">Nessuna build pianificata</p>
+    <div class="mt-4 hidden h-1.5 overflow-hidden rounded-full bg-edge"><div id="sideProgress"></div></div>
+    <p id="sideLabel" class="mt-2 text-[11px] text-muted"></p>
+    <% } %>
+  </div>
+  <% } else { %>
+  <nav class="mt-8 space-y-1 text-sm" aria-label="Sezioni">
+    <a href="/" class="flex items-center gap-3 rounded-lg bg-accent/10 px-3 py-3 font-semibold text-orange-400"><span aria-hidden="true">▦</span> Progetti</a>
+  </nav>
+  <% } %>
+
+  <div class="mt-auto border-t border-edge pt-5">
+    <div class="flex items-center gap-3">
+      <% var uname = user.display_name || user.username || user.local_login || 'Utente'; %>
+      <span class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700/50 text-xs font-semibold" aria-hidden="true"><%= uname.slice(0, 2).toUpperCase() %></span>
+      <div class="min-w-0">
+        <p class="truncate text-sm font-semibold"><%= uname %></p>
+        <p class="text-xs text-muted"><%= member ? labels.ROLE_LABELS[member.role] : (user.is_superadmin ? 'Amministratore' : '') %></p>
+      </div>
+    </div>
+    <form method="post" action="/logout" class="mt-3">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="text-xs text-muted hover:text-white">Esci</button>
+    </form>
+  </div>
+</aside>

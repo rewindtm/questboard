@@ -1,0 +1,12 @@
+body { font-family: 'Barlow', sans-serif; }
+button, input, select, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 2px solid #ff7a00;
+  outline-offset: 3px;
+}
+select { color-scheme: dark; }
+input[type="date"] { color-scheme: dark; }
+dialog { color-scheme: dark; }
+dialog::backdrop { background: #0009; backdrop-filter: blur(4px); }
+button:disabled, select:disabled, input:disabled, textarea:disabled { opacity: .55; cursor: not-allowed; }
+.pre-wrap { white-space: pre-wrap; overflow-wrap: anywhere; }

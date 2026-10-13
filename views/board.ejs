@@ -1,0 +1,45 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Sviluppo' }) %>
+
+<header class="flex flex-wrap items-center justify-between gap-5">
+  <div>
+    <h1 class="text-3xl font-bold tracking-tight text-white">Board di sviluppo</h1>
+    <p class="mt-2 text-sm text-muted">Organizza il lavoro e prepara la prossima build.</p>
+  </div>
+  <% if (snapshot.me.canCreate) { %>
+  <button id="newTaskBtn" type="button" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-500">+ <%= snapshot.me.isAdmin ? 'Nuovo task' : 'Nuova segnalazione' %></button>
+  <% } %>
+</header>
+
+<div id="stats" class="my-7 grid grid-cols-2 gap-3 xl:grid-cols-4" aria-live="polite"></div>
+
+<div class="mb-5 flex items-center justify-between border-b border-edge">
+  <span class="border-b-2 border-accent pb-3 text-sm font-semibold text-white">Tutti i task</span>
+  <span class="pb-3 text-xs text-muted" id="filterCount"></span>
+</div>
+
+<div class="mb-6 flex flex-wrap gap-3">
+  <input id="search" type="search" aria-label="Cerca task" placeholder="Cerca titolo, descrizione o ID..." class="min-w-[190px] flex-1 rounded-lg border border-edge bg-panel px-4 py-3 text-sm placeholder:text-slate-500">
+  <select id="statusFilter" aria-label="Filtra stato" class="rounded-lg border border-edge bg-panel px-3 py-3 text-sm">
+    <option value="">Tutti gli stati</option>
+    <% labels.STATUSES.forEach(function (s) { %><option value="<%= s %>"><%= labels.STATUS_LABELS[s] %></option><% }); %>
+  </select>
+  <select id="priorityFilter" aria-label="Filtra priorità" class="rounded-lg border border-edge bg-panel px-3 py-3 text-sm">
+    <option value="">Tutte le priorità</option>
+    <% labels.PRIORITIES.forEach(function (p) { %><option value="<%= p %>"><%= labels.PRIORITY_LABELS[p] %></option><% }); %>
+  </select>
+  <select id="categoryFilter" aria-label="Filtra categoria" class="rounded-lg border border-edge bg-panel px-3 py-3 text-sm"></select>
+  <select id="ownerFilter" aria-label="Filtra assegnatario" class="rounded-lg border border-edge bg-panel px-3 py-3 text-sm"></select>
+</div>
+
+<div class="grid items-start gap-5 2xl:grid-cols-[minmax(0,1fr)_340px]">
+  <div class="overflow-x-auto pb-3">
+    <div id="board" class="grid min-w-[800px] grid-cols-4 gap-3"></div>
+  </div>
+  <aside id="detail" class="rounded-xl border border-edge bg-panel p-5" aria-label="Dettaglio task"></aside>
+</div>
+
+<%- include('partials/task-dialog') %>
+
+<script type="application/json" id="boot"><%- safeJson(boot) %></script>
+<%- include('partials/foot', { scripts: ['/socket.io/socket.io.js', '/static/js/board.js'] }) %>

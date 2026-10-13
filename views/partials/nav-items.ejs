@@ -1,0 +1,15 @@
+<%
+  var items = [
+    ['board', '▦', 'Board di sviluppo', '/p/' + project.slug],
+    ['milestones', '◈', 'Milestone', '/p/' + project.slug + '/milestones'],
+    ['team', '♧', 'Team', '/p/' + project.slug + '/team'],
+    ['archive', '☷', 'Archivio', '/p/' + project.slug + '/archive']
+  ];
+  if (isAdmin) items.push(['settings', '⚙', 'Impostazioni', '/p/' + project.slug + '/settings']);
+%>
+<% items.forEach(function (it) { var active = nav === it[0]; %>
+  <a href="<%= it[3] %>" <%- active ? 'aria-current="page"' : '' %>
+     class="<%= mobile ? 'shrink-0 ' : '' %>flex items-center gap-3 rounded-lg px-3 py-3 <%= active ? 'bg-accent/10 font-semibold text-orange-400' : 'text-muted hover:bg-white/5 hover:text-white' %>">
+    <span aria-hidden="true"><%= it[1] %></span> <%= it[2] %>
+  </a>
+<% }); %>

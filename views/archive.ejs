@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Archivio' }) %>
+<header>
+  <h1 class="text-3xl font-bold tracking-tight text-white">Archivio</h1>
+  <p class="mt-2 text-sm text-muted">Task archiviati: non compaiono nella board e non sono modificabili finché non vengono ripristinati.</p>
+</header>
+<div class="mt-8 space-y-3">
+  <% if (!tasks.length) { %><p class="rounded-xl border border-edge bg-panel p-6 text-sm text-muted">Nessun task archiviato.</p><% } %>
+  <% tasks.forEach(function (t) { %>
+  <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-edge bg-panel p-4">
+    <div>
+      <p class="text-[10px] tracking-wide text-slate-500"><%= t.code %> · <%= labels.STATUS_LABELS[t.status] %> · <%= labels.PRIORITY_LABELS[t.priority] %></p>
+      <p class="mt-1 text-sm font-semibold text-slate-100"><%= t.title %></p>
+      <p class="mt-1 text-[11px] text-muted"><%= t.assignee ? t.assignee.name : 'Non assegnato' %><%= t.category ? ' · ' + t.category : '' %></p>
+    </div>
+    <% if (isAdmin) { %>
+    <button data-api-action data-method="POST" data-url="/api/tasks/<%= t.id %>/restore" data-body="<%= JSON.stringify({ version: t.version }) %>" class="rounded-lg border border-edge px-3 py-2 text-xs hover:bg-white/5">Ripristina</button>
+    <% } %>
+  </div>
+  <% }); %>
+</div>
+<%- include('partials/foot') %>

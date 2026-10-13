@@ -1,0 +1,13 @@
+<% if (typeof bare !== 'undefined' && bare) { %>
+</main>
+<% } else { %>
+  </main>
+</div>
+<% } %>
+<div id="toasts" class="pointer-events-none fixed bottom-6 left-1/2 z-50 flex w-max max-w-[92vw] -translate-x-1/2 flex-col items-center gap-2" role="status" aria-live="polite"></div>
+<script src="/static/js/common.js"></script>
+<% if (typeof scripts !== 'undefined') { scripts.forEach(function (s) { %>
+<script src="<%= s %>"></script>
+<% }); } %>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<div class="mb-8 flex items-center justify-between gap-3">
+  <p class="text-xs text-muted">
+    <% if (project) { %><%= project.name %> <span class="mx-2 text-slate-600">/</span> <%= crumb %><% } else { %><%= crumb %><% } %>
+  </p>
+  <span id="connState" class="hidden rounded-full border border-edge px-3 py-1 text-[11px] text-muted" data-state="off"></span>
+</div>

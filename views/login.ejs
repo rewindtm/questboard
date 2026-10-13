@@ -1,0 +1,29 @@
+<%- include('partials/head') %>
+<div class="w-full max-w-sm rounded-2xl border border-edge bg-panel p-8">
+  <%- include('partials/brand') %>
+  <h1 class="mt-8 text-2xl font-bold tracking-tight text-white">Accedi</h1>
+  <p class="mt-2 text-sm text-muted">Coordina lo sviluppo del tuo gioco, dal sito e da Discord.</p>
+
+  <% if (flash) { %><p role="alert" class="mt-5 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-300"><%= flash %></p><% } %>
+
+  <% if (config.oauth) { %>
+  <a href="/auth/discord" class="mt-6 flex w-full items-center justify-center rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-500">Accedi con Discord</a>
+  <% } %>
+
+  <% if (config.localAuth) { %>
+  <% if (config.oauth) { %><p class="my-5 text-center text-[11px] uppercase tracking-wider text-slate-500">oppure</p><% } %>
+  <form method="post" action="/auth/local" class="<%= config.oauth ? '' : 'mt-6' %>">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="login" class="mb-2 block text-xs text-muted">Utente</label>
+    <input id="login" name="login" required maxlength="64" autocomplete="username" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+    <label for="password" class="mb-2 mt-4 block text-xs text-muted">Password</label>
+    <input id="password" name="password" type="password" required maxlength="200" autocomplete="current-password" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+    <button class="mt-5 w-full rounded-lg border border-edge px-5 py-3 text-sm font-semibold hover:bg-white/5">Accedi</button>
+  </form>
+  <% } %>
+
+  <% if (!config.oauth && !config.localAuth) { %>
+  <p class="mt-6 text-sm text-muted">Nessun metodo di accesso è configurato. Vedi il README.</p>
+  <% } %>
+</div>
+<%- include('partials/foot') %>

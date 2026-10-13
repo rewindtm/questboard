@@ -1,0 +1,23 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Nuovo progetto' }) %>
+<h1 class="text-3xl font-bold tracking-tight text-white">Nuovo progetto</h1>
+<p class="mt-2 text-sm text-muted">Il collegamento a un forum Discord è facoltativo e si configura dopo, dalle impostazioni.</p>
+<form data-api-form data-method="POST" data-url="/api/projects" data-redirect-field="slug" data-redirect-prefix="/p/" class="mt-8 max-w-lg rounded-xl border border-edge bg-panel p-6">
+  <label for="name" class="mb-2 block text-xs text-muted">Nome</label>
+  <input id="name" name="name" required maxlength="80" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+  <p class="field-error mt-1 text-xs text-red-300" data-error-for="name"></p>
+  <label for="slug" class="mb-2 mt-4 block text-xs text-muted">Slug (URL)</label>
+  <input id="slug" name="slug" required maxlength="49" pattern="[a-z0-9][a-z0-9\-]{1,48}" placeholder="grimthorn-keep" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+  <p class="field-error mt-1 text-xs text-red-300" data-error-for="slug"></p>
+  <label for="code_prefix" class="mb-2 mt-4 block text-xs text-muted">Prefisso codici task</label>
+  <input id="code_prefix" name="code_prefix" value="TASK" maxlength="8" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm uppercase">
+  <p class="field-error mt-1 text-xs text-red-300" data-error-for="code_prefix"></p>
+  <label for="description" class="mb-2 mt-4 block text-xs text-muted">Descrizione</label>
+  <input id="description" name="description" maxlength="300" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+  <p class="form-error mt-4 text-sm text-red-300" role="alert"></p>
+  <div class="mt-6 flex justify-end gap-3">
+    <a href="/" class="rounded-lg border border-edge px-4 py-3 text-sm hover:bg-white/5">Annulla</a>
+    <button class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-orange-500">Crea progetto</button>
+  </div>
+</form>
+<%- include('partials/foot') %>

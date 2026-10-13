@@ -1,0 +1,58 @@
+<dialog id="taskDialog" class="w-[560px] max-w-[94vw] rounded-2xl border border-edge bg-panel p-6 text-slate-200">
+  <form id="taskForm" novalidate>
+    <div class="flex items-center justify-between">
+      <h2 id="taskDialogTitle" class="text-2xl font-bold text-white">Nuovo task</h2>
+      <button type="button" data-close-dialog aria-label="Chiudi" class="rounded-md px-2 text-2xl text-muted hover:text-white">×</button>
+    </div>
+    <p id="taskDialogHint" class="mt-2 text-sm text-muted"></p>
+
+    <div id="conflictBanner" class="mt-4 hidden rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-200" role="alert">
+      Il task è stato modificato da qualcun altro mentre lo stavi modificando.
+      <button type="button" id="loadLatest" class="ml-1 font-semibold underline">Carica la versione aggiornata</button>
+    </div>
+
+    <label for="f-title" class="mb-2 mt-5 block text-xs text-muted">Titolo</label>
+    <input id="f-title" name="title" required maxlength="120" placeholder="Es. Implementare il sistema di inventario" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+    <p class="field-error mt-1 text-xs text-red-300" data-error-for="title"></p>
+
+    <label for="f-description" class="mb-2 mt-4 block text-xs text-muted">Descrizione</label>
+    <textarea id="f-description" name="description" rows="4" maxlength="4000" placeholder="Cosa realizzare e contesto..." class="w-full resize-y rounded-lg border border-edge bg-canvas p-3 text-sm"></textarea>
+    <p class="field-error mt-1 text-xs text-red-300" data-error-for="description"></p>
+
+    <label for="f-checklist" class="mb-2 mt-4 block text-xs text-muted">Criteri di completamento (uno per riga, max 30)</label>
+    <textarea id="f-checklist" name="checklist" rows="4" placeholder="Si possono raccogliere gli oggetti&#10;Gli slot pieni impediscono la raccolta" class="w-full resize-y rounded-lg border border-edge bg-canvas p-3 text-sm"></textarea>
+    <p class="field-error mt-1 text-xs text-red-300" data-error-for="checklist"></p>
+
+    <div class="mt-4 grid grid-cols-2 gap-3">
+      <div>
+        <label for="f-priority" class="mb-2 block text-xs text-muted">Priorità</label>
+        <select id="f-priority" name="priority" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+          <% labels.PRIORITIES.forEach(function (p) { %><option value="<%= p %>" <%= p === 'medium' ? 'selected' : '' %>><%= labels.PRIORITY_LABELS[p] %></option><% }); %>
+        </select>
+      </div>
+      <div>
+        <label for="f-assignee" class="mb-2 block text-xs text-muted">Assegnatario</label>
+        <select id="f-assignee" name="assignee_id" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"></select>
+      </div>
+      <div>
+        <label for="f-category" class="mb-2 block text-xs text-muted">Categoria</label>
+        <select id="f-category" name="category" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"></select>
+      </div>
+      <div>
+        <label for="f-build" class="mb-2 block text-xs text-muted">Build / milestone</label>
+        <select id="f-build" name="build_id" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"></select>
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label for="f-due" class="mb-2 block text-xs text-muted">Scadenza</label>
+        <input id="f-due" name="due_date" type="date" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+        <p class="field-error mt-1 text-xs text-red-300" data-error-for="due_date"></p>
+      </div>
+    </div>
+
+    <p id="taskFormError" class="mt-4 text-sm text-red-300" role="alert"></p>
+    <div class="mt-6 flex justify-end gap-3">
+      <button type="button" data-close-dialog class="rounded-lg border border-edge px-4 py-3 text-sm hover:bg-white/5">Annulla</button>
+      <button type="submit" id="taskSubmit" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-orange-500">Crea task</button>
+    </div>
+  </form>
+</dialog>

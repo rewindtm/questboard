@@ -1,0 +1,47 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Milestone' }) %>
+<header>
+  <h1 class="text-3xl font-bold tracking-tight text-white">Build e milestone</h1>
+  <p class="mt-2 text-sm text-muted">Le release previste del progetto e il loro avanzamento.</p>
+</header>
+
+<% if (isAdmin) { %>
+<form data-api-form data-method="POST" data-url="/api/projects/<%= project.id %>/builds" class="mt-8 grid items-start gap-3 rounded-xl border border-edge bg-panel p-5 sm:grid-cols-[1fr_140px_160px_auto]">
+  <div><label for="b-name" class="mb-2 block text-xs text-muted">Nome</label>
+    <input id="b-name" name="name" required maxlength="60" placeholder="Build 37" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm">
+    <p class="field-error mt-1 text-xs text-red-300" data-error-for="name"></p></div>
+  <div><label for="b-kind" class="mb-2 block text-xs text-muted">Tipo</label>
+    <select id="b-kind" name="kind" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"><option value="build">Build</option><option value="milestone">Milestone</option></select></div>
+  <div><label for="b-due" class="mb-2 block text-xs text-muted">Scadenza</label>
+    <input id="b-due" name="due_date" type="date" class="w-full rounded-lg border border-edge bg-canvas p-3 text-sm"></div>
+  <button class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-orange-500 sm:mt-6">Aggiungi</button>
+  <p class="form-error text-sm text-red-300 sm:col-span-4" role="alert"></p>
+</form>
+<% } %>
+
+<div class="mt-6 space-y-3">
+  <% if (!builds.length) { %><p class="rounded-xl border border-edge bg-panel p-6 text-sm text-muted">Nessuna build o milestone definita.</p><% } %>
+  <% builds.forEach(function (b) { var pct = b.total ? Math.round(b.done / b.total * 100) : 0; %>
+  <section class="rounded-xl border border-edge bg-panel p-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-lg font-semibold text-white"><%= b.name %>
+          <span class="ml-2 rounded-md bg-white/5 px-2 py-1 text-[10px] font-normal text-muted"><%= b.kind === 'milestone' ? 'Milestone' : 'Build' %></span>
+          <% if (b.released) { %><span class="ml-1 rounded-md bg-emerald-400/10 px-2 py-1 text-[10px] font-normal text-emerald-300">Rilasciata</span><% } %></p>
+        <p class="mt-1 text-xs text-muted"><%= b.due_date ? 'Scadenza ' + b.due_date : 'Nessuna scadenza' %> · <%= b.done %> di <%= b.total %> task completati</p>
+      </div>
+      <% if (isAdmin) { %>
+      <div class="flex gap-2">
+        <button data-api-action data-method="PUT" data-url="/api/projects/<%= project.id %>/builds/<%= b.id %>"
+                data-body="<%= JSON.stringify({ name: b.name, kind: b.kind, due_date: b.due_date, released: !b.released }) %>"
+                class="rounded-lg border border-edge px-3 py-2 text-xs hover:bg-white/5"><%= b.released ? 'Riapri' : 'Segna rilasciata' %></button>
+        <button data-api-action data-method="DELETE" data-url="/api/projects/<%= project.id %>/builds/<%= b.id %>" data-confirm="Eliminare <%= b.name %>?"
+                class="rounded-lg border border-edge px-3 py-2 text-xs text-red-300 hover:bg-white/5">Elimina</button>
+      </div>
+      <% } %>
+    </div>
+    <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-edge"><div class="h-full rounded-full bg-accent" style="width: <%= pct %>%"></div></div>
+  </section>
+  <% }); %>
+</div>
+<%- include('partials/foot') %>

@@ -1,0 +1,30 @@
+<%- include('partials/head') %>
+<%- include('partials/breadcrumb', { crumb: 'Progetti' }) %>
+<header class="flex flex-wrap items-center justify-between gap-5">
+  <div>
+    <h1 class="text-3xl font-bold tracking-tight text-white">Progetti</h1>
+    <p class="mt-2 text-sm text-muted">Scegli il progetto su cui lavorare.</p>
+  </div>
+  <% if (user.is_superadmin) { %>
+  <a href="/projects/new" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-500">+ Nuovo progetto</a>
+  <% } %>
+</header>
+
+<% if (!projects.length) { %>
+<div class="mt-8 rounded-xl border border-edge bg-panel p-8 text-center">
+  <p class="text-lg font-semibold text-white">Non fai ancora parte di nessun progetto</p>
+  <p class="mx-auto mt-2 max-w-md text-sm text-muted">Accedere non basta: un amministratore deve aggiungerti al team del progetto.
+    <% if (user.discord_id) { %>Comunica il tuo Discord user ID (<span class="font-mono text-slate-300"><%= user.discord_id %></span>) a chi gestisce il progetto.<% } else { %>Chiedi a chi gestisce il progetto di aggiungerti.<% } %></p>
+</div>
+<% } else { %>
+<div class="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+  <% projects.forEach(function (p) { %>
+  <a href="/p/<%= p.slug %>" class="block rounded-xl border border-edge bg-panel p-5 transition hover:border-slate-500">
+    <p class="text-lg font-semibold text-white"><%= p.name %></p>
+    <p class="mt-1 text-sm text-muted"><%= p.description || 'Nessuna descrizione' %></p>
+    <p class="mt-4 text-[11px] text-slate-500"><%= labels.ROLE_LABELS[p.role] %></p>
+  </a>
+  <% }); %>
+</div>
+<% } %>
+<%- include('partials/foot') %>
