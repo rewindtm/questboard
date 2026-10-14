@@ -211,7 +211,7 @@
     const ed = editable(t);
     const done = t.checklist.filter((i) => i.done).length;
     box.innerHTML = `
-    <div class="grid gap-6 md:grid-cols-2 2xl:grid-cols-1">
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-1">
       <section class="min-w-0">
         <p class="text-xs font-semibold text-muted">Dettaglio task</p>
         <div class="mt-5 flex items-center justify-between">
@@ -250,7 +250,7 @@
         </div>
       </section>
 
-      <section class="min-w-0 border-t border-edge pt-5 md:border-t-0 md:pt-0 2xl:border-t 2xl:pt-5">
+      <section class="min-w-0 border-t border-edge pt-5 md:border-t-0 md:pt-0 xl:border-t xl:pt-5">
         ${discordSection(t)}
         <p class="mb-3 mt-6 text-xs font-semibold">Storico</p>
         <div id="history" class="max-h-96 overflow-y-auto pr-1">${renderHistory()}</div>
