@@ -104,14 +104,16 @@
 
   function renderRelease() {
     const rel = S.builds.find((b) => !b.released);
-    const name = $('releaseName'); const bar = $('sideProgress'); const label = $('sideLabel');
+    const name = $('releaseName'); const bar = $('sideProgress'); const label = $('sideLabel'); const pctEl = $('sidePct');
     if (!name || !bar || !label) return;
-    if (!rel) { name.textContent = 'Nessuna build pianificata'; label.textContent = ''; bar.parentElement.classList.add('hidden'); return; }
+    if (!rel) { name.textContent = 'Nessuna build pianificata'; label.textContent = ''; if (pctEl) pctEl.textContent = ''; bar.parentElement.classList.add('hidden'); return; }
     const mine = list().filter((t) => t.build?.id === rel.id);
     const done = mine.filter((t) => t.status === 'done').length;
     name.textContent = rel.name;
     bar.parentElement.classList.remove('hidden');
-    bar.style.width = `${mine.length ? Math.round((done / mine.length) * 100) : 0}%`;
+    const pct = mine.length ? Math.round((done / mine.length) * 100) : 0;
+    bar.style.width = `${pct}%`;
+    if (pctEl) pctEl.textContent = `${pct}%`;
     label.textContent = `${done} di ${mine.length} task completati`;
   }
 
