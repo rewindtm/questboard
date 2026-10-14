@@ -40,6 +40,8 @@ function createApp({ config, pool, services, gateway, deps = {} }) {
     hsts: config.secureCookies ? undefined : false,
   }));
 
+  // il browser chiede il favicon da solo: senza questa rotta finirebbe tra le pagine protette e diventerebbe la destinazione dopo il login
+  app.get('/favicon.ico', (req, res) => res.status(204).end());
   app.use('/static', express.static(path.join(__dirname, '..', '..', 'public'), { maxAge: config.isProd ? '1h' : 0 }));
   // il client di socket.io e servito da socket.io stesso (/socket.io/socket.io.js)
 
