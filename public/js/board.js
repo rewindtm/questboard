@@ -253,7 +253,7 @@
       <section class="min-w-0 border-t border-edge pt-5 md:border-t-0 md:pt-0 xl:border-t xl:pt-5">
         ${discordSection(t)}
         <p class="mb-3 mt-6 text-xs font-semibold">Storico</p>
-        <div id="history" class="max-h-96 overflow-y-auto pr-1">${renderHistory()}</div>
+        <div id="history">${renderHistory()}</div>
       </section>
     </div>`;
   }
@@ -266,13 +266,20 @@
       S.members.map((m) => `<option value="${m.id}" ${S.filters.owner === String(m.id) ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}`;
   }
 
-  function renderAll() { renderStats(); renderRelease(); renderBoard(); renderDetail(); }
+  // il pannello resta visibile mentre si scorre; se è più alto della finestra si ancora dal basso, così si vede per intero
+  function fitDetail() {
+    const box = $('detail');
+    box.style.top = `${Math.min(16, window.innerHeight - box.offsetHeight - 16)}px`;
+  }
+  window.addEventListener('resize', fitDetail);
+
+  function renderAll() { renderStats(); renderRelease(); renderBoard(); renderDetail(); fitDetail(); }
 
   // ------------------------------------------------------------------ selezione / storico
   async function loadHistory(id) {
     try {
       const r = await api('GET', `/api/tasks/${id}/history`);
-      if (S.selected === id) { S.history = r.events; const h = $('history'); if (h) h.innerHTML = renderHistory(); }
+      if (S.selected === id) { S.history = r.events; const h = $('history'); if (h) h.innerHTML = renderHistory(); fitDetail(); }
     } catch { /* lo storico non e bloccante */ }
   }
   function select(id, { push = true } = {}) {
@@ -506,6 +513,7 @@
     if (ev.task_id !== S.selected || S.history.some((x) => x.id === ev.id)) return;
     S.history.unshift(ev);
     const h = $('history'); if (h) h.innerHTML = renderHistory();
+    fitDetail();
   });
   socket.on('project:changed', () => resync());
   socket.on('project:removed', ({ projectId }) => { if (projectId === S.project.id) window.location.href = '/'; });
