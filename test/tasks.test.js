@@ -190,3 +190,15 @@ test('team: non si rimuove l\'ultimo admin ne chi ha task aperti', async () => {
   await assert.rejects(p.addMember(t.dev, t.project.id, { discord_id: '123456789012345678', role: 'tester' }), { code: 'forbidden' });
   void x;
 });
+
+test('impostazioni progetto: la mappa dei tag puo essere vuota o parziale', () => {
+  const { projectSettingsSchema, parse } = require('../src/domain/validation');
+  const base = { name: 'P', categories: ['Bug'], discord_guild_id: '', discord_forum_id: '' };
+  const empty = parse(projectSettingsSchema, { ...base, discord_tag_map: { status: {}, priority: {} } });
+  assert.equal(empty.discord_guild_id, null);
+  const partial = parse(projectSettingsSchema, {
+    ...base, discord_tag_map: { status: { todo: '123456789012345678' }, priority: {} },
+  });
+  assert.deepEqual(partial.discord_tag_map.status, { todo: '123456789012345678' });
+  assert.throws(() => parse(projectSettingsSchema, { ...base, discord_tag_map: { status: { inventato: '123456789012345678' }, priority: {} } }));
+});

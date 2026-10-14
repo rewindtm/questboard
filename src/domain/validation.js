@@ -67,8 +67,8 @@ const projectSettingsSchema = z.strictObject({
   discord_guild_id: z.preprocess(emptyToNull, z.string().regex(/^\d{15,25}$/, 'ID server non valido').nullable()),
   discord_forum_id: z.preprocess(emptyToNull, z.string().regex(/^\d{15,25}$/, 'ID canale non valido').nullable()),
   discord_tag_map: z.strictObject({
-    status: z.record(z.enum(STATUSES), z.string().regex(/^\d{15,25}$/)).default({}),
-    priority: z.record(z.enum(PRIORITIES), z.string().regex(/^\d{15,25}$/)).default({}),
+    status: z.partialRecord(z.enum(STATUSES), z.string().regex(/^\d{15,25}$/)).default({}),
+    priority: z.partialRecord(z.enum(PRIORITIES), z.string().regex(/^\d{15,25}$/)).default({}),
   }).default({ status: {}, priority: {} }),
 });
 
