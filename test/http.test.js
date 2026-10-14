@@ -207,3 +207,20 @@ test('Socket.IO: sessione obbligatoria, isolamento tra progetti, snapshot', asyn
   await new Promise((r) => setTimeout(r, 400));
   assert.deepEqual(gotA, [], 'chi e stato rimosso non riceve piu aggiornamenti');
 });
+
+test('dopo il login non si finisce mai su /auth/local o /favicon.ico', async (t) => {
+  const s = await setup();
+  t.after(() => s.close());
+  const c = makeClient(s.base);
+  await c.req('GET', '/login', { json: false });
+  // ricarica del form dopo un errore di login: torna a /login e non diventa la destinazione
+  assert.equal((await c.req('POST', '/auth/local', { form: { login: 'root', password: 'sbagliata-sbagliata' }, json: false })).status, 401);
+  const reload = await c.req('GET', '/auth/local', { json: false });
+  assert.equal(reload.status, 302);
+  assert.match(reload.location, /\/login$/);
+  assert.equal((await c.req('GET', '/favicon.ico', { json: false })).status, 204);
+  await c.req('GET', '/login', { json: false });
+  const ok = await c.req('POST', '/auth/local', { form: { login: 'root', password: LOCAL_PW }, json: false });
+  assert.equal(ok.status, 302);
+  assert.equal(new URL(ok.location, s.base).pathname, '/');
+});

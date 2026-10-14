@@ -66,8 +66,9 @@ function csrf() {
 const requireAuthPage = (req, res, next) => {
   if (req.user) return next();
   // ricorda la destinazione solo per vere navigazioni di pagina, non per risorse richieste dal browser
-  req.session.returnTo = req.method === 'GET' && req.accepts('html') === 'html' && req.get('sec-fetch-dest') !== 'image'
-    ? req.originalUrl : undefined;
+  const navigable = req.method === 'GET' && req.accepts('html') === 'html' && req.get('sec-fetch-dest') !== 'image'
+    && !/^\/(auth|login|logout|api|static)(\/|\?|$)/.test(req.originalUrl);
+  req.session.returnTo = navigable ? req.originalUrl : undefined;
   res.redirect('/login');
 };
 const requireAuthApi = (req, res, next) => (req.user ? next() : next(new AuthError()));

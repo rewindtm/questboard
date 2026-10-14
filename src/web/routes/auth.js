@@ -22,7 +22,9 @@ function authRoutes({ config, services, oauth, limiter }) {
     req.session.userId = user.id;
     req.session.csrf = crypto.randomBytes(24).toString('hex');
     await save(req);
-    return typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/';
+    const safe = typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//')
+      && !/^\/(auth|login|logout|api|static)(\/|\?|$)/.test(returnTo);
+    return safe ? returnTo : '/';
   }
 
   r.get('/auth/discord', limiter(20), (req, res) => {
@@ -49,6 +51,9 @@ function authRoutes({ config, services, oauth, limiter }) {
     const user = await services.users.upsertDiscordUser(profile);
     res.redirect(await loginAs(req, user));
   });
+
+  // un GET su /auth/local (es. ricarica dopo un errore di login) torna al form
+  r.get('/auth/local', (req, res) => res.redirect('/login'));
 
   r.post('/auth/local', limiter(10), async (req, res) => {
     if (!config.localAuth.enabled) return renderLogin(res, 404, 'Il login locale non e abilitato.');
