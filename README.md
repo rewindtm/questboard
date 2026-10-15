@@ -47,7 +47,7 @@ La chiusura (SIGINT/SIGTERM) è ordinata: ferma il worker, chiude Socket.IO e il
 | `DATABASE_URL` | connessione PostgreSQL |
 | `SESSION_SECRET` | almeno 32 caratteri casuali |
 | `APP_BASE_URL` | URL pubblico dell'app (usato nei link dei post Discord) |
-| `TRUST_PROXY` | es. `1` dietro un reverse proxy, per cookie sicuri e IP corretti |
+| `TRUST_PROXY` | automatico se `APP_BASE_URL` è https (dietro reverse proxy, necessario per IP e cookie sicuri); `0` per disattivarlo |
 | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_CALLBACK_URL` | login OAuth2 |
 | `DISCORD_BOT_TOKEN` | bot; se manca, l'integrazione risulta "non configurata" e nulla viene inviato |
 | `BOOTSTRAP_ADMIN_DISCORD_ID` | Discord user ID del primo amministratore |

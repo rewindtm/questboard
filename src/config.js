@@ -38,7 +38,8 @@ function loadConfig(env = process.env) {
     sessionSecret,
     appBaseUrl,
     secureCookies: /^https:/i.test(appBaseUrl),
-    trustProxy: flag(env.TRUST_PROXY),
+    // dietro un reverse proxy (APP_BASE_URL https) l'IP e il protocollo arrivano da X-Forwarded-*: default attivo, disattivabile con TRUST_PROXY=0
+    trustProxy: env.TRUST_PROXY === undefined || env.TRUST_PROXY === '' ? /^https:/i.test(appBaseUrl) : flag(env.TRUST_PROXY),
     discord: {
       clientId: env.DISCORD_CLIENT_ID || '',
       clientSecret: env.DISCORD_CLIENT_SECRET || '',
